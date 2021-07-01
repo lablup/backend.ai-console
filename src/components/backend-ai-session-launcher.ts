@@ -2115,35 +2115,37 @@ export default class BackendAiSessionLauncher extends BackendAIPage {
    * @param {Boolean} isResourceClicked - true if resource is clicked
    */
   _applyResourceValueChanges(e, isResourceClicked = true) {
-    const value = e.target.value;
-    const id = e.target.id.split('-')[0];
-    switch (id) {
-    case 'cpu':
-      this.cpu_request = value;
-      break;
-    case 'mem':
-      this.mem_request = value;
-      break;
-    case 'shmem':
-      this.shmem_request = value;
-      break;
-    case 'gpu':
-      this.gpu_request = value;
-      break;
-    case 'session':
-      this.session_request = value;
-      break;
-    case 'cluster':
-      this._changeTotalAllocationPane();
-      break;
-    default:
-      break;
-    }
-    this.requestUpdate();
-    if (isResourceClicked) { // resource allocation
-      this._resourceTemplateToCustom();
-    } else { // cluster mode
-      this._setClusterSize(e);
+    if (!e.target.disabled) {
+      const value = e.target.value;
+      const id = e.target.id.split('-')[0];
+      switch (id) {
+      case 'cpu':
+        this.cpu_request = value;
+        break;
+      case 'mem':
+        this.mem_request = value;
+        break;
+      case 'shmem':
+        this.shmem_request = value;
+        break;
+      case 'gpu':
+        this.gpu_request = value;
+        break;
+      case 'session':
+        this.session_request = value;
+        break;
+      case 'cluster':
+        this._changeTotalAllocationPane();
+        break;
+      default:
+        break;
+      }
+      this.requestUpdate();
+      if (isResourceClicked) { // resource allocation
+        this._resourceTemplateToCustom();
+      } else { // cluster mode
+        this._setClusterSize(e);
+      }
     }
   }
 
@@ -2747,12 +2749,8 @@ export default class BackendAiSessionLauncher extends BackendAIPage {
               <div class="resource-type">RAM</div>
               <lablup-slider id="mem-resource" class="mem"
                              pin snaps step=0.05 editable markers
-                              @click="${() => {
-    this._resourceTemplateToCustom();
-  }}"
-                              @changed="${() => {
-    this._updateShmemLimit();
-  }}"
+                             @click="${(e) => this._applyResourceValueChanges(e)}"
+                             @changed="${() => this._updateShmemLimit()}"
                              marker_limit="${this.marker_limit}"
                              min="${this.mem_metric.min}" max="${this.mem_metric.max}"
                              value="${this.mem_request}"></lablup-slider>
