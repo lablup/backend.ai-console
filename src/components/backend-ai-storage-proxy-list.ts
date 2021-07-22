@@ -430,8 +430,9 @@ export default class BackendAIStorageProxyList extends BackendAIPage {
       // language=HTML
       html`
         <div id="controls" class="layout horizontal flex center" agent-id="${rowData.item.id}">
-          <mwc-icon-button class="fg blue controls-running" icon="assignment"
-                           @click="${(e) => this.showStorageProxyDetailDialog(rowData.item.id)}"></mwc-icon-button>
+          <mwc-icon-button class="fg blue controls-running" icon="assignment" 
+                          ?disabled=${Object.keys(JSON.parse(rowData.item.performance_metric)).length == 0 && JSON.parse(rowData.item.performance_metric).constructor == Object}
+                          @click="${(e) => this.showStorageProxyDetailDialog(rowData.item.id)}"></mwc-icon-button>
         </div>`, root
     );
   }
